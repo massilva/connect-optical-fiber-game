@@ -11,21 +11,19 @@
             source: [],
             targer: []
         };
+
         elements.source = source.enter().append("g")
             .attr({
-                "transform" : function (d) {
-                    return "translate(" + [d.x, d.y] + ")";
-                },
+                "transform" : gameOptions.transform,
                 'class' : 'fibreSource'
             });
         elements.source.append("rect")
             .attr("width", gameOptions.objectsDim.width)
             .attr("height", gameOptions.objectsDim.height);
+
         elements.target = target.enter().append("g")
             .attr({
-                "transform" : function (d) {
-                    return "translate(" + [d.x, d.y] + ")";
-                },
+                "transform" : gameOptions.transform,
                 'class' : 'fibreTarget'
             });
         elements.target.append("rect")
@@ -60,6 +58,9 @@
                 objectsDim: {
                     width: 50,
                     height: 50
+                },
+                transform: function (d) {
+                    return "translate(" + [d.x, d.y] + ")";
                 }
             },
             centerObj = {
