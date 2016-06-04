@@ -4,12 +4,13 @@ html, body, .game, .h100{
   overflow: hidden;
 }
 .content {
-    padding: 20px;
-    height: 100%;
+    padding: 0;
+    height: 85%;
     margin: 0 auto -50px;
+    border: 1px solid #333;
 }
 
-html, section, body, footer, div, p, .h100 {
+html, section, body, footer, div, p, .h100, .content {
   box-sizing: border-box;
 }
 body {
@@ -28,7 +29,7 @@ header {
   min-height: 50px;
 }
 
-header h1 {
+.name {
   margin: 0 0 20px 0;
   color: #ecf0f1;
 }

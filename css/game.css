@@ -22,3 +22,8 @@ path{
 line{
   transition: visibility 1s, opacity 0.4s linear;
 }
+
+svg{
+    stroke: black;
+    stroke-width: 1;
+}
