@@ -1,6 +1,50 @@
 (function (window) {
     'use strict';
-    var state;
+    var state, stage, MAX_STAGE = 5, startStage;
+
+    function clearStage(gameContent) {
+        gameContent.select("svg").remove();
+    }
+
+    function nextStage() {
+        stage += 1;
+    }
+
+    function winStage() {
+        if (stage < MAX_STAGE) {
+            nextStage();
+            startStage(stage);
+        }
+    }
+
+    function checkEndGame(dataTarget, max) {
+        var selecteds = d3.selectAll("g.fibreTarget.selected")[0], i, connect, hits = 0;
+        if (selecteds.length === max) {
+            for (i = 0; i < selecteds.length; i += 1) {
+                connect = window.parseInt(d3.select(selecteds[i]).attr('data-source'));
+                if (dataTarget[i] === connect) {
+                    hits += 1;
+                }
+            }
+            if (hits === max) {
+                winStage();
+            }
+        }
+    }
+
+    function shuffleArray(arr) {
+        var j, x, i, newArr = [];
+        for (i = arr.length - 1; i >= 0; i -= 1) {
+            newArr[i] = arr[i];
+        }
+        for (i = newArr.length - 1; i >= 0; i -= 1) {
+            j = Math.floor(Math.random() * i);
+            x = newArr[i];
+            newArr[i] = newArr[j];
+            newArr[j] = x;
+        }
+        return newArr;
+    }
 
     function getId(idx) {
         return 'line-' + idx;
@@ -9,7 +53,7 @@
     function drawElements(source, target, gameOptions) {
         var elements = {
             source: [],
-            targer: []
+            target: []
         };
 
         elements.source = source.enter().append("g")
@@ -41,8 +85,8 @@
         return elements;
     }
 
-    function getPositionsElements(stage, gameOptions) {
-        var i, len = stage + 2, data;
+    function getPositionsElements(len, gameOptions) {
+        var i, data;
         data = {
             source: [],
             target: []
@@ -54,15 +98,15 @@
         return data;
     }
 
-    function startGame(stage) {
+    startStage = function (stage) {
         state = "START";
-        console.log(state);
 
         var source, target,
             screenWidth = window.screen.availWidth,
-            selected,
+            selected, i,
+            max = stage + 2,
             data = {},
-            elements = {},
+            dataGraphic = {},
             gameBoard, gameContent,
             gameOptions = {
                 width: screenWidth * 0.8,
@@ -92,16 +136,23 @@
             };
 
         //Load game board
-        gameContent = d3.select(".content").attr('style', 'width: ' + gameOptions.width + 'px');
+        gameContent = d3.select(".content").style({width: gameOptions.width + 'px'});
+        clearStage(gameContent);
         gameBoard = gameContent.append("svg");
         gameBoard.attr('width', gameOptions.width + 'px');
         gameBoard.classed("h100", true);
 
         //Load data elements
-        data = getPositionsElements(stage, gameOptions);
-        source = gameBoard.selectAll("g.fibre").data(data.source);
-        target = gameBoard.selectAll("g.fibre").data(data.target);
-        elements = drawElements(source, target, gameOptions);
+        dataGraphic = getPositionsElements(max, gameOptions);
+        source = gameBoard.selectAll("g.fibre").data(dataGraphic.source);
+        target = gameBoard.selectAll("g.fibre").data(dataGraphic.target);
+        drawElements(source, target, gameOptions);
+
+        data = {source: [], target: []};
+        for (i = 0; i < max; i += 1) {
+            data.source[i] = i;
+        }
+        data.target = shuffleArray(data.source);
 
         /**
         * Click events
@@ -126,22 +177,20 @@
                     target.attr('data-source', selected.i);
                     target.select("rect").attr('fill', gameOptions.colors[selected.i]);
                     connectFibre(selected, d);
+                    checkEndGame(data.target, max);
                 }
             }
         });
-
-        console.log(elements);
-    }
+    };
 
     function menuStart() {
         state = "MENU";
-        console.log(state);
-        startGame(5);
+        startStage(stage);
     }
 
     function firstPage() {
         state = "FIRST";
-        console.log(state);
+        stage = 0;
         menuStart();
     }
 
