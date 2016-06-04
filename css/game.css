@@ -1,0 +1,39 @@
+.fibreSource,
+.fibreTarget,
+line,
+path{
+    stroke-linecap: round;
+}
+
+.fibreSource,
+.fibreTarget{
+  transition: 3s linear;
+}
+
+.fibreSource.selected,
+.fibreTarget.selected{
+  fill: white;
+  stroke-width: 1;
+  stroke-dasharray: 10;
+  transition: 2s ease-out;
+}
+
+.fibreSource{
+  fill: red;
+}
+
+.fibreSource.selected{
+  stroke: red;
+}
+
+.fibreTarget{
+  fill: blue;
+}
+
+.fibreTarget.selected{
+  stroke: blue;
+}
+
+line{
+  transition: visibility 1s, opacity 0.4s linear;
+}
