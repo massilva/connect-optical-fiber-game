@@ -1,4 +1,4 @@
-(function () {
+(function (window) {
     'use strict';
     var state;
 
@@ -18,8 +18,14 @@
                 'class' : 'fibreSource'
             });
         elements.source.append("rect")
-            .attr("width", gameOptions.objectsDim.width)
-            .attr("height", gameOptions.objectsDim.height);
+            .attr({
+                "width": gameOptions.objectsDim.width,
+                "height": gameOptions.objectsDim.height,
+                "fill": function (d, i) {
+                    return gameOptions.colors[i];
+                },
+                "opacity": 0.75
+            });
 
         elements.target = target.enter().append("g")
             .attr({
@@ -27,8 +33,11 @@
                 'class' : 'fibreTarget'
             });
         elements.target.append("rect")
-            .attr("width", gameOptions.objectsDim.width)
-            .attr("height", gameOptions.objectsDim.height);
+            .attr({
+                "width": gameOptions.objectsDim.width,
+                "height": gameOptions.objectsDim.height,
+                "fill": gameOptions.defaultColor
+            });
         return elements;
     }
 
@@ -47,21 +56,25 @@
 
     function startGame(stage) {
         state = "START";
-        console.log(state, "Que os jogos começem!");
+        console.log(state);
 
-        var gameBoard, source, target,
+        var source, target,
+            screenWidth = window.screen.availWidth,
             selected,
             data = {},
             elements = {},
+            gameBoard, gameContent,
             gameOptions = {
-                width: 800,
+                width: screenWidth * 0.8,
                 objectsDim: {
                     width: 50,
                     height: 50
                 },
                 transform: function (d) {
                     return "translate(" + [d.x, d.y] + ")";
-                }
+                },
+                colors: ["#2ecc71", "#f1c40f", "#16a085", "#c0392b", "#8e44ad", "#2c3e50", "#d35400"],
+                defaultColor: "#bdc3c7"
             },
             centerObj = {
                 x : gameOptions.objectsDim.width / 2,
@@ -79,7 +92,8 @@
             };
 
         //Load game board
-        gameBoard = d3.select(".content").append("svg");
+        gameContent = d3.select(".content").attr('style', 'width: ' + gameOptions.width + 'px');
+        gameBoard = gameContent.append("svg");
         gameBoard.attr('width', gameOptions.width + 'px');
         gameBoard.classed("h100", true);
 
@@ -92,12 +106,13 @@
         /**
         * Click events
         */
-        elements.source.selectAll('rect').on("click", function (d, i) { // fn(d, i)
+        d3.selectAll('.fibreSource rect').on("click", function (d, i) { // fn(d, i)
             var g = this.parentNode, isSelected = d3.select(g).classed("selected");
             d3.select(g).classed("selected", !isSelected);
             selected = {d: d, i: i};
+            console.log(selected, g);
         });
-        elements.target.selectAll('rect').on("click", function (d) { // fn(d, i)
+        d3.selectAll('.fibreTarget rect').on("click", function (d) {
             var previouslySelected;
             if (selected) {
                 previouslySelected = d3.selectAll('g[data-source="' + selected.i + '"]');
@@ -106,9 +121,11 @@
                 target = d3.select(target);
                 if (!target.attr('data-source')) { //Not has selected
                     previouslySelected.attr('data-source', '').classed("selected", false);
+                    previouslySelected.select("rect").attr('fill', gameOptions.defaultColor);
                     d3.selectAll('#' + getId(selected.i)).remove();
                     target.classed("selected", true);
                     target.attr('data-source', selected.i);
+                    target.select("rect").attr('fill', gameOptions.colors[selected.i]);
                     connectFibre(selected, d);
                 }
             }
@@ -120,7 +137,7 @@
     function menuStart() {
         state = "MENU";
         console.log(state);
-        startGame(2);
+        startGame(5);
     }
 
     function firstPage() {
@@ -130,4 +147,4 @@
     }
 
     firstPage();
-}());
+}(window));
