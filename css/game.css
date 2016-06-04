@@ -12,26 +12,11 @@ path{
 
 .fibreSource.selected,
 .fibreTarget.selected{
-  fill: white;
-  stroke-width: 1;
-  stroke-dasharray: 10;
   transition: 2s ease-out;
 }
 
-.fibreSource{
-  fill: red;
-}
-
-.fibreSource.selected{
-  stroke: red;
-}
-
-.fibreTarget{
-  fill: blue;
-}
-
-.fibreTarget.selected{
-  stroke: blue;
+.fibreSource.selected rect{
+    opacity: 1;
 }
 
 line{

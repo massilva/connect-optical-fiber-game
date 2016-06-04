@@ -1,40 +1,38 @@
-html, body, .game {
+html, body, .game, .h100{
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 .content {
-  padding: 20px;
-  height: 100%;
-  margin: 0 auto -50px;
-}
-.footer {
-  height: 50px;
+    padding: 20px;
+    height: 100%;
+    margin: 0 auto -50px;
 }
 
-html, section, body, footer, div, p {
+html, section, body, footer, div, p, .h100 {
   box-sizing: border-box;
 }
 body {
   font: 16px Sans-Serif;
 }
-h1 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-}
+
 p {
   margin: 20px 0 0 0;
 }
-footer {
+
+header {
   color: white;
   padding: 0 20px;
   line-height: 50px;
   background: #2980b9;
+  min-height: 50px;
+}
+
+header h1 {
+  margin: 0 0 20px 0;
+  color: #ecf0f1;
 }
 
 .w100{
   width: 100%;
-}
-
-.h100{
-  height: 100%;
 }
