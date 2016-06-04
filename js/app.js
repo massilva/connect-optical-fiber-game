@@ -107,10 +107,9 @@
         * Click events
         */
         d3.selectAll('.fibreSource rect').on("click", function (d, i) { // fn(d, i)
-            var g = this.parentNode, isSelected = d3.select(g).classed("selected");
-            d3.select(g).classed("selected", !isSelected);
+            var g = this.parentNode;
+            d3.select(g).classed("selected", true);
             selected = {d: d, i: i};
-            console.log(selected, g);
         });
         d3.selectAll('.fibreTarget rect').on("click", function (d) {
             var previouslySelected;
