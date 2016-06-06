@@ -1,7 +1,16 @@
+@font-face {
+    font-family: FontAwesome;
+    src: url(fonts/fontawesome-webfont.woff);
+    src: url(fonts/fontawesome-webfont.eot);
+    src: url(fonts/fontawesome-webfont.svg);
+    src: url(fonts/FontAwesome.otf);
+}
+
 html, body, .game, .h100{
   height: 100%;
   margin: 0;
   overflow: hidden;
+  font-family: FontAwesome;
 }
 .content {
     padding: 0;
@@ -36,4 +45,13 @@ header {
 
 .w100{
   width: 100%;
+}
+
+.btn{
+    font-family: FontAwesome;
+    stroke: none;
+}
+
+.btn:hover{
+    stroke: #000;
 }

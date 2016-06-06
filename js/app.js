@@ -1,9 +1,36 @@
 (function (window) {
     'use strict';
-    var state, stage, MAX_STAGE = 5, startStage;
+    var stage, MAX_STAGE = 5, startStage, startGame,
+        screenWidth = window.screen.availWidth,
+        gameOptions = {
+            width: screenWidth * 0.8,
+            objectsDim: {
+                width: 50,
+                height: 50
+            },
+            transform: function (d) {
+                return "translate(" + [d.x, d.y] + ")";
+            },
+            colors: ["#2ecc71", "#f1c40f", "#16a085", "#c0392b", "#8e44ad", "#2c3e50", "#d35400"],
+            defaultColor: "#bdc3c7"
+        };
 
     function clearStage(gameContent) {
         gameContent.select("svg").remove();
+    }
+
+    function getGameContent() {
+        return d3.select(".content").style({width: gameOptions.width + 'px'});
+    }
+
+    function createGameBoard() {
+        var gameContent, gameBoard;
+        gameContent = getGameContent();
+        clearStage(gameContent);
+        gameBoard = gameContent.append("svg");
+        gameBoard.attr('width', gameOptions.width + 'px');
+        gameBoard.classed("h100", true);
+        return gameBoard;
     }
 
     function nextStage() {
@@ -17,6 +44,36 @@
         }
     }
 
+    function lostStage(dataTarget, hits, max) {
+        var gameBoard = createGameBoard();
+        gameBoard.append('text')
+            .text('You hit(s)')
+            .attr('x', gameOptions.width * 0.5)
+            .attr('y', 150)
+            .attr('font-size', '5em')
+            .attr('fill', '#2980b9')
+            .attr('text-anchor', 'middle');
+        gameBoard.append('text')
+            .attr('text-anchor', 'middle')
+            .attr('x', gameOptions.width * 0.5)
+            .attr('y', 320)
+            .text(hits + ' of ' + (max - hits) + '.')
+            .attr('font-size', '10em')
+            .attr('fill', 'red');
+        gameBoard.append('text')
+            .attr('class', 'btn')
+            .attr('text-anchor', 'middle')
+            .attr('x', gameOptions.width * 0.5)
+            .attr('y', 450)
+            .text('Restart')
+            .attr('font-size', '5em')
+            .attr('fill', '#2980b9')
+            .on('click', function () {
+                gameBoard.selectAll('text').remove();
+                startGame(gameBoard, dataTarget, max);
+            });
+    }
+
     function checkEndGame(dataTarget, max) {
         var selecteds = d3.selectAll("g.fibreTarget.selected")[0], i, connect, hits = 0;
         if (selecteds.length === max) {
@@ -28,6 +85,8 @@
             }
             if (hits === max) {
                 winStage();
+            } else {
+                lostStage(dataTarget, hits, max);
             }
         }
     }
@@ -98,28 +157,9 @@
         return data;
     }
 
-    startStage = function (stage) {
-        state = "START";
-
-        var source, target,
-            screenWidth = window.screen.availWidth,
-            selected, i,
-            max = stage + 2,
-            data = {},
-            dataGraphic = {},
-            gameBoard, gameContent,
-            gameOptions = {
-                width: screenWidth * 0.8,
-                objectsDim: {
-                    width: 50,
-                    height: 50
-                },
-                transform: function (d) {
-                    return "translate(" + [d.x, d.y] + ")";
-                },
-                colors: ["#2ecc71", "#f1c40f", "#16a085", "#c0392b", "#8e44ad", "#2c3e50", "#d35400"],
-                defaultColor: "#bdc3c7"
-            },
+    startGame = function (gameBoard, dataTarget, max) {
+        var dataGraphic = {}, target, source,
+            selected,
             centerObj = {
                 x : gameOptions.objectsDim.width / 2,
                 y : gameOptions.objectsDim.height / 2
@@ -135,25 +175,11 @@
                     .attr('id', getId(fibreSource.i));
             };
 
-        //Load game board
-        gameContent = d3.select(".content").style({width: gameOptions.width + 'px'});
-        clearStage(gameContent);
-        gameBoard = gameContent.append("svg");
-        gameBoard.attr('width', gameOptions.width + 'px');
-        gameBoard.classed("h100", true);
-
         //Load data elements
         dataGraphic = getPositionsElements(max, gameOptions);
         source = gameBoard.selectAll("g.fibre").data(dataGraphic.source);
         target = gameBoard.selectAll("g.fibre").data(dataGraphic.target);
         drawElements(source, target, gameOptions);
-
-        data = {source: [], target: []};
-        for (i = 0; i < max; i += 1) {
-            data.source[i] = i;
-        }
-        data.target = shuffleArray(data.source);
-
         /**
         * Click events
         */
@@ -177,19 +203,35 @@
                     target.attr('data-source', selected.i);
                     target.select("rect").attr('fill', gameOptions.colors[selected.i]);
                     connectFibre(selected, d);
-                    checkEndGame(data.target, max);
+                    checkEndGame(dataTarget, max);
                 }
             }
         });
     };
 
+    startStage = function (stage) {
+
+        var i, max = stage + 2,
+            data = {},
+            gameBoard;
+
+        data = {source: [], target: []};
+        for (i = 0; i < max; i += 1) {
+            data.source[i] = i;
+        }
+        data.target = shuffleArray(data.source);
+
+        //Load game board
+        gameBoard = createGameBoard();
+        startGame(gameBoard, data.target, max);
+
+    };
+
     function menuStart() {
-        state = "MENU";
         startStage(stage);
     }
 
     function firstPage() {
-        state = "FIRST";
         stage = 0;
         menuStart();
     }
