@@ -79,6 +79,7 @@
         if (selecteds.length === max) {
             for (i = 0; i < selecteds.length; i += 1) {
                 connect = window.parseInt(d3.select(selecteds[i]).attr('data-source'));
+                console.log(i, '->', connect);
                 if (dataTarget[i] === connect) {
                     hits += 1;
                 }
@@ -105,7 +106,7 @@
         return newArr;
     }
 
-    function getId(idx) {
+    function getLineId(idx) {
         return 'line-' + idx;
     }
 
@@ -172,7 +173,7 @@
                     .attr('y2', centerObj.y + fibreTarget.y)
                     .attr('stroke-width', 5)
                     .attr('stroke', 'black')
-                    .attr('id', getId(fibreSource.i));
+                    .attr('id', getLineId(fibreSource.i));
             };
 
         //Load data elements
@@ -198,7 +199,7 @@
                 if (!target.attr('data-source')) { //Not has selected
                     previouslySelected.attr('data-source', '').classed("selected", false);
                     previouslySelected.select("rect").attr('fill', gameOptions.defaultColor);
-                    d3.selectAll('#' + getId(selected.i)).remove();
+                    d3.selectAll('#' + getLineId(selected.i)).remove();
                     target.classed("selected", true);
                     target.attr('data-source', selected.i);
                     target.select("rect").attr('fill', gameOptions.colors[selected.i]);
