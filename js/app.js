@@ -57,7 +57,7 @@
             .attr('text-anchor', 'middle')
             .attr('x', gameOptions.width * 0.5)
             .attr('y', 320)
-            .text(hits + ' of ' + (max - hits) + '.')
+            .text(hits + ' of ' + max + '.')
             .attr('font-size', '10em')
             .attr('fill', 'red');
         gameBoard.append('text')
@@ -74,21 +74,17 @@
             });
     }
 
-    function checkEndGame(dataTarget, max) {
-        var selecteds = d3.selectAll("g.fibreTarget.selected")[0], i, connect, hits = 0;
-        if (selecteds.length === max) {
-            for (i = 0; i < selecteds.length; i += 1) {
-                connect = window.parseInt(d3.select(selecteds[i]).attr('data-source'));
-                console.log(i, '->', connect);
-                if (dataTarget[i] === connect) {
-                    hits += 1;
-                }
+    function endGame(dataTarget, dataSelected, max) {
+        var i, hits = 0;
+        for (i = 0; i < dataSelected.length; i += 1) {
+            if (dataTarget[i] === dataSelected[i]) {
+                hits += 1;
             }
-            if (hits === max) {
-                winStage();
-            } else {
-                lostStage(dataTarget, hits, max);
-            }
+        }
+        if (hits === max) {
+            winStage();
+        } else {
+            lostStage(dataTarget, hits, max);
         }
     }
 
@@ -159,8 +155,8 @@
     }
 
     startGame = function (gameBoard, dataTarget, max) {
-        var dataGraphic = {}, target, source,
-            selected,
+        var dataGraphic = {}, dataSelected = [], countSelected = 0,
+            target, source, selected,
             centerObj = {
                 x : gameOptions.objectsDim.width / 2,
                 y : gameOptions.objectsDim.height / 2
@@ -189,7 +185,7 @@
             d3.select(g).classed("selected", true);
             selected = {d: d, i: i};
         });
-        d3.selectAll('.fibreTarget rect').on("click", function (d) {
+        d3.selectAll('.fibreTarget rect').on("click", function (d, i) {
             var previouslySelected;
             if (selected) {
                 previouslySelected = d3.selectAll('g[data-source="' + selected.i + '"]');
@@ -203,8 +199,12 @@
                     target.classed("selected", true);
                     target.attr('data-source', selected.i);
                     target.select("rect").attr('fill', gameOptions.colors[selected.i]);
+                    dataSelected[selected.i] = i;
                     connectFibre(selected, d);
-                    checkEndGame(dataTarget, max);
+                    countSelected += 1;
+                    if (countSelected === max) {
+                        endGame(dataTarget, dataSelected, max);
+                    }
                 }
             }
         });
