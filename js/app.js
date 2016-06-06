@@ -228,13 +228,28 @@
 
     };
 
-    function menuStart() {
-        startStage(stage);
+    function introductionGame() {
+        var i, step, gameBoard = createGameBoard(), startBtn,
+            text = ["Your internet is connected via optical fiber cable.",
+                "The internet crashed and you need to merge the fibers ",
+                "in the splice distributor to make it work.",
+                "Connect the fibres, left side with right side,",
+                "correctly to fix it."];
+
+        step = 150;
+        for (i = 0; i < text.length; i += 1) {
+            addText(gameBoard, gameOptions.width * 0.5, step + (i * 40), text[i], '3em').attr('stroke', 'none');
+        }
+        startBtn = addText(gameBoard, gameOptions.width * 0.5, 400, 'Start Game', '5em', '#27ae60');
+        startBtn.attr('class', 'btn')
+            .on('click', function () {
+                startStage(stage);
+            });
     }
 
     function firstPage() {
         stage = 0;
-        menuStart();
+        introductionGame();
     }
 
     firstPage();
