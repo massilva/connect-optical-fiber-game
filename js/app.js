@@ -44,30 +44,22 @@
         }
     }
 
-    function lostStage(dataTarget, hits, max) {
-        var gameBoard = createGameBoard();
-        gameBoard.append('text')
-            .text('You hit(s)')
-            .attr('x', gameOptions.width * 0.5)
-            .attr('y', 150)
-            .attr('font-size', '5em')
-            .attr('fill', '#2980b9')
+    function addText(element, x, y, text, fontSize, fontColor) {
+        return element.append('text')
+            .text(text)
+            .attr('x', x)
+            .attr('y', y)
+            .attr('font-size', fontSize || '10em')
+            .attr('fill', fontColor || '#2980b9')
             .attr('text-anchor', 'middle');
-        gameBoard.append('text')
-            .attr('text-anchor', 'middle')
-            .attr('x', gameOptions.width * 0.5)
-            .attr('y', 320)
-            .text(hits + ' of ' + max + '.')
-            .attr('font-size', '10em')
-            .attr('fill', 'red');
-        gameBoard.append('text')
-            .attr('class', 'btn')
-            .attr('text-anchor', 'middle')
-            .attr('x', gameOptions.width * 0.5)
-            .attr('y', 450)
-            .text('Restart')
-            .attr('font-size', '5em')
-            .attr('fill', '#2980b9')
+    }
+
+    function lostStage(dataTarget, hits, max) {
+        var gameBoard = createGameBoard(), restartBtn;
+        addText(gameBoard, gameOptions.width * 0.5, 150, 'You hit(s)', '5em');
+        addText(gameBoard, gameOptions.width * 0.5, 350, hits + ' of ' + max + '.', '10em', 'red');
+        restartBtn = addText(gameBoard, gameOptions.width * 0.5, 450, 'Restart', '5em');
+        restartBtn.attr('class', 'btn')
             .on('click', function () {
                 gameBoard.selectAll('text').remove();
                 startGame(gameBoard, dataTarget, max);
