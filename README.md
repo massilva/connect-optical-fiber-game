@@ -1,6 +1,6 @@
-# Connect Fibre  - The Game
+# Connect Optical Fiber - The Game
 
-Your internet is connected via fiber optic cable.
+Your internet is connected via optical fiber cable.
 
 The internet crashed and you need to merge the fibers in the splice distributor to make it work.
 
