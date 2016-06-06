@@ -35,13 +35,7 @@
 
     function nextStage() {
         stage += 1;
-    }
-
-    function winStage() {
-        if (stage < MAX_STAGE) {
-            nextStage();
-            startStage(stage);
-        }
+        startStage(stage);
     }
 
     function addText(element, x, y, text, fontSize, fontColor) {
@@ -54,10 +48,24 @@
             .attr('text-anchor', 'middle');
     }
 
+    function winStage() {
+        var gameBoard = createGameBoard(), nextBtn;
+        addText(gameBoard, gameOptions.width * 0.5, 250, 'Stage ' + stage + ' complete', '7em');
+        nextBtn = addText(gameBoard, gameOptions.width * 0.5, 400, 'Next', '5em', '#27ae60');
+        nextBtn.attr('class', 'btn')
+            .on('click', function () {
+                if (stage < MAX_STAGE) {
+                    nextStage();
+                } else {
+                    addText(gameBoard, gameOptions.width * 0.5, 350, 'Congrats! finished game');
+                }
+            });
+    }
+
     function lostStage(dataTarget, hits, max) {
         var gameBoard = createGameBoard(), restartBtn;
         addText(gameBoard, gameOptions.width * 0.5, 150, 'You hit(s)', '5em');
-        addText(gameBoard, gameOptions.width * 0.5, 350, hits + ' of ' + max + '.', '10em', 'red');
+        addText(gameBoard, gameOptions.width * 0.5, 350, hits + ' of ' + max, '10em', 'red');
         restartBtn = addText(gameBoard, gameOptions.width * 0.5, 450, 'Restart', '5em');
         restartBtn.attr('class', 'btn')
             .on('click', function () {
