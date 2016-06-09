@@ -27,3 +27,15 @@ svg{
     stroke: black;
     stroke-width: 1;
 }
+
+@media all and (max-width: 600px) {
+    text{
+        font-size: 12pt;
+    }
+    svg, .content{
+        min-width: 100%;
+    }
+    .name{
+        text-align: center;
+    }
+}
