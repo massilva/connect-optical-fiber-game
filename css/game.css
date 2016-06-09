@@ -31,11 +31,15 @@ svg{
 @media all and (max-width: 600px) {
     text{
         font-size: 12pt;
+        stroke: none;
     }
     svg, .content{
         min-width: 100%;
     }
     .name{
         text-align: center;
+    }
+    .btn{
+        font-size: 16pt;
     }
 }
