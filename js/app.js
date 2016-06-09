@@ -1,6 +1,6 @@
 (function (window) {
     'use strict';
-    var stage, MAX_STAGE = 5, startStage, startGame,
+    var stage, MAX_STAGE = 7, startStage, startGame,
         screenWidth = window.screen.availWidth,
         gameOptions = {
             width: screenWidth * 0.8,
@@ -11,7 +11,7 @@
             transform: function (d) {
                 return "translate(" + [d.x, d.y] + ")";
             },
-            colors: ["#2ecc71", "#f1c40f", "#16a085", "#c0392b", "#8e44ad", "#2c3e50", "#d35400"],
+            colors: ["#2ecc71", "#f1c40f", "#16a085", "#CF000F", "#8e44ad", "#2c3e50", "#d35400", "#52B3D9", "#DB0A5B"],
             defaultColor: "#bdc3c7"
         };
 
