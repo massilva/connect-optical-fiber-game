@@ -199,9 +199,11 @@
                     target.classed("selected", true);
                     target.attr('data-source', selected.i);
                     target.select("rect").attr('fill', gameOptions.colors[selected.i]);
+                    if (dataSelected[selected.i] === undefined) {
+                        countSelected += 1;
+                    }
                     dataSelected[selected.i] = i;
                     connectFibre(selected, d);
-                    countSelected += 1;
                     if (countSelected === max) {
                         endGame(dataTarget, dataSelected, max);
                     }
@@ -231,14 +233,14 @@
     function introductionGame() {
         var i, step, gameBoard = createGameBoard(), startBtn,
             text = ["Your internet is connected via optical fiber cable.",
-                "The internet crashed and you need to merge the fibers ",
+                "The internet is crashed and you need to merge the fibers ",
                 "in the splice distributor to make it work.",
                 "Connect the fibres, left side with right side,",
                 "correctly to fix it."];
 
         step = 150;
         for (i = 0; i < text.length; i += 1) {
-            addText(gameBoard, gameOptions.width * 0.5, step + (i * 40), text[i], '3em').attr('stroke', 'none');
+            addText(gameBoard, gameOptions.width * 0.5, step + (i * 40), text[i], '26pt').attr('stroke', 'none');
         }
         startBtn = addText(gameBoard, gameOptions.width * 0.5, 400, 'Start Game', '5em', '#27ae60');
         startBtn.attr('class', 'btn')
